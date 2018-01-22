@@ -1,0 +1,79 @@
+#2User_defined Variables
+
+mysql> SELECT * FROM limbs WHERE legs=0;
++------------+------+------+
+| thing      | legs | arms |
++------------+------+------+
+| squid      |    0 |   10 |
+| fish       |    0 |    0 |
+| phonograph |    0 |    1 |
++------------+------+------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT @max_limbs:=MAX(arms+legs) FROM limbs;
++----------------------------+
+| @max_limbs:=MAX(arms+legs) |
++----------------------------+
+|                        100 |
++----------------------------+
+1 row in set (0.01 sec)
+
+mysql> SELECT * FROM limbs WHERE arms+legs = @max_limbs;
++-----------+------+------+
+| thing     | legs | arms |
++-----------+------+------+
+| centipede |  100 |    0 |
++-----------+------+------+
+1 row in set (0.00 sec)
+
+#LAST_INSERT_ID(), returns the most recent increment value.
+mysql> SELECT @last_id:=LAST_INSERT_ID()
+    -> ;
++----------------------------+
+| @last_id:=LAST_INSERT_ID() |
++----------------------------+
+|                          0 |
++----------------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT @name:=thing FROM limbs WHERE legs=0;
++--------------+
+| @name:=thing |
++--------------+
+| squid        |
+| fish         |
+| phonograph   |
++--------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT @name;
++------------+
+| @name      |
++------------+
+| phonograph |
++------------+
+1 row in set (0.00 sec)
+
+#SET, set a variable to a particular value
+mysql> SET @sum=4+7;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SELECT @sum;
++------+
+| @sum |
++------+
+|   11 |
++------+
+1 row in set (0.00 sec)
+
+mysql> SET @max_limbs=(SELECT MAX(legs+arms) FROM limbs);
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SELECT @max_limbs;
++------------+
+| @max_limbs |
++------------+
+|        100 |
++------------+
+1 row in set (0.00 sec)
+
