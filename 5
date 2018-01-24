@@ -1,0 +1,328 @@
+mysql> SELECT COUNT(DISTINCT srcuser) FROM mail;
++-------------------------+
+| COUNT(DISTINCT srcuser) |
++-------------------------+
+|                       4 |
++-------------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT DISTINCT YEAR(t),MONTH(t),DAYOFMONTH(t) FROM mail;
++---------+----------+---------------+
+| YEAR(t) | MONTH(t) | DAYOFMONTH(t) |
++---------+----------+---------------+
+|    2014 |        5 |            11 |
+|    2014 |        5 |            12 |
+|    2014 |        5 |            14 |
+|    2014 |        5 |            15 |
+|    2014 |        5 |            16 |
+|    2014 |        5 |            19 |
++---------+----------+---------------+
+6 rows in set (0.00 sec)
+
+mysql> source F:\Coursera\SQL\MyCookbook\recipes\tables\expt.sql
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+Query OK, 0 rows affected (0.06 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
++---------+------+-------+
+| subject | test | score |
++---------+------+-------+
+| Jane    | A    |    47 |
+| Jane    | B    |    50 |
+| Jane    | C    |  NULL |
+| Jane    | D    |  NULL |
+| Marvin  | A    |    52 |
+| Marvin  | B    |    45 |
+| Marvin  | C    |    53 |
+| Marvin  | D    |  NULL |
++---------+------+-------+
+8 rows in set (0.00 sec)
+
+mysql> SELECT * FROM expt WHERE score IS NULL;
++---------+------+-------+
+| subject | test | score |
++---------+------+-------+
+| Jane    | C    |  NULL |
+| Jane    | D    |  NULL |
+| Marvin  | D    |  NULL |
++---------+------+-------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM expt WHERE score IS NOT NULL;
++---------+------+-------+
+| subject | test | score |
++---------+------+-------+
+| Jane    | A    |    47 |
+| Jane    | B    |    50 |
+| Marvin  | A    |    52 |
+| Marvin  | B    |    45 |
+| Marvin  | C    |    53 |
++---------+------+-------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT subject, test, IF(score IS NULL,'Unknown',score)AS score FROM expt;
++---------+------+---------+
+| subject | test | score   |
++---------+------+---------+
+| Jane    | A    | 47      |
+| Jane    | B    | 50      |
+| Jane    | C    | Unknown |
+| Jane    | D    | Unknown |
+| Marvin  | A    | 52      |
+| Marvin  | B    | 45      |
+| Marvin  | C    | 53      |
+| Marvin  | D    | Unknown |
++---------+------+---------+
+8 rows in set (0.00 sec)
+
+mysql> SELECT subject, test, IFNULL(score,'Unknown')AS score FROM expt;
++---------+------+---------+
+| subject | test | score   |
++---------+------+---------+
+| Jane    | A    | 47      |
+| Jane    | B    | 50      |
+| Jane    | C    | Unknown |
+| Jane    | D    | Unknown |
+| Marvin  | A    | 52      |
+| Marvin  | B    | 45      |
+| Marvin  | C    | 53      |
+| Marvin  | D    | Unknown |
++---------+------+---------+
+8 rows in set (0.00 sec)
+
+mysql> SELECT DATE_FORMAT(t,'%M %e, %Y') AS date_sent,
+    -> CONCAT(srcuser,'@',srchost)AS sender,
+    -> CONCAT(dstuser,'@',dsthost)AS recipient,
+    -> size FROM mail;
++--------------+---------------+---------------+---------+
+| date_sent    | sender        | recipient     | size    |
++--------------+---------------+---------------+---------+
+| May 11, 2014 | barb@saturn   | tricia@mars   |   58274 |
+| May 12, 2014 | tricia@mars   | gene@venus    |  194925 |
+| May 12, 2014 | phil@mars     | phil@saturn   |    1048 |
+| May 12, 2014 | barb@saturn   | tricia@venus  |     271 |
+| May 14, 2014 | gene@venus    | barb@mars     |    2291 |
+| May 14, 2014 | phil@mars     | tricia@saturn |    5781 |
+| May 14, 2014 | barb@venus    | barb@venus    |   98151 |
+| May 14, 2014 | tricia@saturn | phil@venus    | 2394482 |
+| May 15, 2014 | gene@mars     | gene@saturn   |    3824 |
+| May 15, 2014 | phil@venus    | phil@venus    |     978 |
+| May 15, 2014 | gene@mars     | tricia@saturn |  998532 |
+| May 15, 2014 | gene@saturn   | gene@mars     |    3856 |
+| May 16, 2014 | gene@venus    | barb@mars     |     613 |
+| May 16, 2014 | phil@venus    | barb@venus    |   10294 |
+| May 19, 2014 | phil@mars     | tricia@saturn |     873 |
+| May 19, 2014 | gene@saturn   | gene@venus    |   23992 |
++--------------+---------------+---------------+---------+
+16 rows in set (0.00 sec)
+
+
+Enter password: ******
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 15
+Server version: 5.7.21-log MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> USE COOKBOOK;
+Database changed
+mysql> CREATE VIEW mail_view AS
+    -> SELECT
+    -> DATE_FORMAT(t,'%M %e, %Y')AS date_sent,
+    -> CONCAT(srcuser,'@',srchost)AS sender,
+    -> CONCAT(dstuser,'@',dsthost)AS recipient,
+    -> size FROM mail;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> SELECT date_sent,sender,recipient,size FROM mail_view;
++--------------+---------------+---------------+---------+
+| date_sent    | sender        | recipient     | size    |
++--------------+---------------+---------------+---------+
+| May 11, 2014 | barb@saturn   | tricia@mars   |   58274 |
+| May 12, 2014 | tricia@mars   | gene@venus    |  194925 |
+| May 12, 2014 | phil@mars     | phil@saturn   |    1048 |
+| May 12, 2014 | barb@saturn   | tricia@venus  |     271 |
+| May 14, 2014 | gene@venus    | barb@mars     |    2291 |
+| May 14, 2014 | phil@mars     | tricia@saturn |    5781 |
+| May 14, 2014 | barb@venus    | barb@venus    |   98151 |
+| May 14, 2014 | tricia@saturn | phil@venus    | 2394482 |
+| May 15, 2014 | gene@mars     | gene@saturn   |    3824 |
+| May 15, 2014 | phil@venus    | phil@venus    |     978 |
+| May 15, 2014 | gene@mars     | tricia@saturn |  998532 |
+| May 15, 2014 | gene@saturn   | gene@mars     |    3856 |
+| May 16, 2014 | gene@venus    | barb@mars     |     613 |
+| May 16, 2014 | phil@venus    | barb@venus    |   10294 |
+| May 19, 2014 | phil@mars     | tricia@saturn |     873 |
+| May 19, 2014 | gene@saturn   | gene@venus    |   23992 |
++--------------+---------------+---------------+---------+
+16 rows in set (0.00 sec)
+
+mysql> SELECT date_sent,sender,recipient,size FROM mail_view
+    -> WHERE size > 100000 ORDER BY size;
++--------------+---------------+---------------+---------+
+| date_sent    | sender        | recipient     | size    |
++--------------+---------------+---------------+---------+
+| May 12, 2014 | tricia@mars   | gene@venus    |  194925 |
+| May 15, 2014 | gene@mars     | tricia@saturn |  998532 |
+| May 14, 2014 | tricia@saturn | phil@venus    | 2394482 |
++--------------+---------------+---------------+---------+
+3 rows in set (0.00 sec)
+
+mysql> source F:\Coursera\SQL\MyCookbook\recipes\tables\profile.sql
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+Query OK, 0 rows affected (0.06 sec)
+
+Query OK, 8 rows affected (0.00 sec)
+Records: 8  Duplicates: 0  Warnings: 0
+
++----+---------+------------+-------+-----------------------+------+
+| id | name    | birth      | color | foods                 | cats |
++----+---------+------------+-------+-----------------------+------+
+|  1 | Sybil   | 1970-04-13 | black | lutefisk,fadge,pizza  |    0 |
+|  2 | Nancy   | 1969-09-30 | white | burrito,curry,eggroll |    3 |
+|  3 | Ralph   | 1973-11-02 | red   | eggroll,pizza         |    4 |
+|  4 | Lothair | 1963-07-04 | blue  | burrito,curry         |    5 |
+|  5 | Henry   | 1965-02-14 | red   | curry,fadge           |    1 |
+|  6 | Aaron   | 1968-09-17 | green | lutefisk,fadge        |    1 |
+|  7 | Joanna  | 1952-08-20 | green | lutefisk,fadge        |    0 |
+|  8 | Stephen | 1960-05-01 | white | burrito,pizza         |    0 |
++----+---------+------------+-------+-----------------------+------+
+8 rows in set (0.00 sec)
+
+mysql> source F:\Coursera\SQL\MyCookbook\recipes\tables\profile_contact.sql
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+Query OK, 0 rows affected (0.06 sec)
+
+Query OK, 6 rows affected (0.00 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
++------------+----------+--------------+
+| profile_id | service  | contact_name |
++------------+----------+--------------+
+|          1 | Twitter  | user1-twtrid |
+|          1 | Facebook | user1-fbid   |
+|          2 | Twitter  | user2-fbrid  |
+|          2 | Facebook | user2-msnid  |
+|          2 | LinkedIn | user2-lnkdid |
+|          4 | LinkedIn | user4-lnkdid |
++------------+----------+--------------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT id,name,service,contact_name
+    -> FROM profile JOIN profile_contact
+    -> ON profile.id=profile_contact.id;
+ERROR 1054 (42S22): Unknown column 'profile_contact.id' in 'on clause'
+mysql> SELECT id,name,service,contact_name
+    -> FROM profile JOIN profile_contact
+    -> ON id=profile_id;
++----+---------+----------+--------------+
+| id | name    | service  | contact_name |
++----+---------+----------+--------------+
+|  1 | Sybil   | Twitter  | user1-twtrid |
+|  1 | Sybil   | Facebook | user1-fbid   |
+|  2 | Nancy   | Twitter  | user2-fbrid  |
+|  2 | Nancy   | Facebook | user2-msnid  |
+|  2 | Nancy   | LinkedIn | user2-lnkdid |
+|  4 | Lothair | LinkedIn | user4-lnkdid |
++----+---------+----------+--------------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT * FROM profile_contact
+    -> WHERE profile_id = (
+    -> SELECT id FROM profile
+    -> WHERE name='Nancy');
++------------+----------+--------------+
+| profile_id | service  | contact_name |
++------------+----------+--------------+
+|          2 | Twitter  | user2-fbrid  |
+|          2 | Facebook | user2-msnid  |
+|          2 | LinkedIn | user2-lnkdid |
++------------+----------+--------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT *
+    -> FROM profile
+    -> ORDER BY birth LIMIT 1;
++----+--------+------------+-------+----------------+------+
+| id | name   | birth      | color | foods          | cats |
++----+--------+------------+-------+----------------+------+
+|  7 | Joanna | 1952-08-20 | green | lutefisk,fadge |    0 |
++----+--------+------------+-------+----------------+------+
+1 row in set (0.00 sec)
+
+mysql> ORDER BY birth DESC LIMIT 1;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ORDER BY birth DESC LIMIT 1' at line 1
+mysql> SELECT *
+    -> FROM profile
+    -> ORDER BY birth DESC LIMIT 1;
++----+-------+------------+-------+---------------+------+
+| id | name  | birth      | color | foods         | cats |
++----+-------+------------+-------+---------------+------+
+|  3 | Ralph | 1973-11-02 | red   | eggroll,pizza |    4 |
++----+-------+------------+-------+---------------+------+
+1 row in set (0.00 sec)
+
+mysql>  SELECT name,DATE_FORMAT(birth,'%m-%d') FROM profile
+    -> ORDER BY DATE_FORMAT(birth,'%m-%d') LIMIT 5;
++---------+----------------------------+
+| name    | DATE_FORMAT(birth,'%m-%d') |
++---------+----------------------------+
+| Henry   | 02-14                      |
+| Sybil   | 04-13                      |
+| Stephen | 05-01                      |
+| Lothair | 07-04                      |
+| Joanna  | 08-20                      |
++---------+----------------------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT name,birth FROM profile ORDER BY birth DESC limit 4;
++-------+------------+
+| name  | birth      |
++-------+------------+
+| Ralph | 1973-11-02 |
+| Sybil | 1970-04-13 |
+| Nancy | 1969-09-30 |
+| Aaron | 1968-09-17 |
++-------+------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT * FROM(SELECT name,birth FROM profile ORDER BY birth DESC limit 4)
+    -> ORDER BY birth;
+ERROR 1248 (42000): Every derived table must have its own alias
+mysql> SELECT * FROM(SELECT name,birth FROM profile ORDER BY birth DESC limit 4)AS refined
+    -> ORDER BY birth;
++-------+------------+
+| name  | birth      |
++-------+------------+
+| Aaron | 1968-09-17 |
+| Nancy | 1969-09-30 |
+| Sybil | 1970-04-13 |
+| Ralph | 1973-11-02 |
++-------+------------+
+4 rows in set (0.00 sec)
+
+mysql>
