@@ -56,3 +56,26 @@ INSERT INTO mail (t,srchost,srcuser,dsthost,dstuser,size)
     ('2014-05-19 12:49:23','mars','phil','saturn','tricia',873),
     ('2014-05-19 22:21:51','saturn','gene','venus','gene',23992)
 ;
+
+
+SELECT strftime('%m %d, %Y',t),(srcuser||'@'||srchost),size
+FROM mail;
+
+"05 11, 2014"	"barb@saturn"	"58274"
+"05 12, 2014"	"tricia@mars"	"194925"
+"05 12, 2014"	"phil@mars"	"1048"
+"05 12, 2014"	"barb@saturn"	"271"
+"05 14, 2014"	"gene@venus"	"2291"
+"05 14, 2014"	"phil@mars"	"5781"
+"05 14, 2014"	"barb@venus"	"98151"
+"05 14, 2014"	"tricia@saturn"	"2394482"
+"05 15, 2014"	"gene@mars"	"3824"
+"05 15, 2014"	"phil@venus"	"978"
+"05 15, 2014"	"gene@mars"	"998532"
+"05 15, 2014"	"gene@saturn"	"3856"
+"05 16, 2014"	"gene@venus"	"613"
+"05 16, 2014"	"phil@venus"	"10294"
+"05 19, 2014"	"phil@mars"	"873"
+"05 19, 2014"	"gene@saturn"	"23992"
+
+#REMOVE duplicate rows
