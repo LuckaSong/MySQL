@@ -1,0 +1,107 @@
+mysql> USE cookbook;
+Database changed
+mysql> SELECT * FROM mail;
++---------------------+---------+---------+---------+---------+---------+
+| t                   | srcuser | srchost | dstuser | dsthost | size    |
++---------------------+---------+---------+---------+---------+---------+
+| 2014-05-11 10:15:08 | barb    | saturn  | tricia  | mars    |   58274 |
+| 2014-05-12 12:48:13 | tricia  | mars    | gene    | venus   |  194925 |
+| 2014-05-12 15:02:49 | phil    | mars    | phil    | saturn  |    1048 |
+| 2014-05-12 18:59:18 | barb    | saturn  | tricia  | venus   |     271 |
+| 2014-05-14 09:31:37 | gene    | venus   | barb    | mars    |    2291 |
+| 2014-05-14 11:52:17 | phil    | mars    | tricia  | saturn  |    5781 |
+| 2014-05-14 14:42:21 | barb    | venus   | barb    | venus   |   98151 |
+| 2014-05-14 17:03:01 | tricia  | saturn  | phil    | venus   | 2394482 |
+| 2014-05-15 07:17:48 | gene    | mars    | gene    | saturn  |    3824 |
+| 2014-05-15 08:50:57 | phil    | venus   | phil    | venus   |     978 |
+| 2014-05-15 10:25:52 | gene    | mars    | tricia  | saturn  |  998532 |
+| 2014-05-15 17:35:31 | gene    | saturn  | gene    | mars    |    3856 |
+| 2014-05-16 09:00:28 | gene    | venus   | barb    | mars    |     613 |
+| 2014-05-16 23:04:19 | phil    | venus   | barb    | venus   |   10294 |
+| 2014-05-19 12:49:23 | phil    | mars    | tricia  | saturn  |     873 |
+| 2014-05-19 22:21:51 | gene    | saturn  | gene    | venus   |   23992 |
++---------------------+---------+---------+---------+---------+---------+
+16 rows in set (0.01 sec)
+
+#Clone a table
+mysql> CREATE TABLE mail2 LIKE mail;
+Query OK, 0 rows affected (0.06 sec)
+
+#Insert specific rows into a created table
+mysql> INSERT INTO mail2 SELECT * FROM mail WHERE srcuser='barb';
+Query OK, 3 rows affected (0.02 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+#Create Temporary Tables
+mysql> CREATE TEMPORARY TABLE mail SELECT * FROM mail;
+Query OK, 16 rows affected (0.00 sec)
+Records: 16  Duplicates: 0  Warnings: 0
+
+mysql> DELETE FROM mail;
+Query OK, 16 rows affected (0.00 sec)
+
+mysql> SELECT COUNT(*)FROM mail;
++----------+
+| COUNT(*) |
++----------+
+|        0 |
++----------+
+1 row in set (0.01 sec)
+
+mysql> DROP TEMPORARY TABLE mail;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SELECT COUNT(*) FROM mail;
++----------+
+| COUNT(*) |
++----------+
+|       16 |
++----------+
+1 row in set (0.00 sec)
+
+#Change Storage Engine
+mysql> SELECT ENGINE FROM INFORMATION_SCHEMA.TABLES
+    -> WHERE TABLE_SCHEMA='cookbook' AND TABLE_NAME='mail';
++--------+
+| ENGINE |
++--------+
+| InnoDB |
++--------+
+1 row in set (0.02 sec)
+
+mysql> SHOW TABLE STATUS LIKE 'mail'\G
+*************************** 1. row ***************************
+           Name: mail
+         Engine: InnoDB
+        Version: 10
+     Row_format: Dynamic
+           Rows: 16
+ Avg_row_length: 1024
+    Data_length: 16384
+Max_data_length: 0
+   Index_length: 16384
+      Data_free: 0
+ Auto_increment: NULL
+    Create_time: 2018-01-24 13:41:11
+    Update_time: 2018-01-24 13:41:11
+     Check_time: NULL
+      Collation: utf8_general_ci
+       Checksum: NULL
+ Create_options:
+        Comment:
+1 row in set (0.00 sec)
+
+mysql> SHOW CREATE TABLE mail\G
+*************************** 1. row ***************************
+       Table: mail
+Create Table: CREATE TABLE `mail` (
+  `t` datetime DEFAULT NULL,
+  `srcuser` varchar(8) DEFAULT NULL,
+  `srchost` varchar(20) DEFAULT NULL,
+  `dstuser` varchar(8) DEFAULT NULL,
+  `dsthost` varchar(20) DEFAULT NULL,
+  `size` bigint(20) DEFAULT NULL,
+  KEY `t` (`t`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+1 row in set (0.00 sec)
+
