@@ -105,3 +105,211 @@ Create Table: CREATE TABLE `mail` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 1 row in set (0.00 sec)
 
+Enter password: ******
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 22
+Server version: 5.7.21-log MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> USE COOKBOOK;
+Database changed
+mysql> source F:\Coursera\SQL\MyCookbook\recipes\tables\time_val.sql
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+Query OK, 0 rows affected (0.10 sec)
+
+Query OK, 1 row affected (0.01 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
++----------+----------+
+| t1       | t2       |
++----------+----------+
+| 15:00:00 | 15:00:00 |
+| 05:01:30 | 02:30:20 |
+| 12:30:20 | 17:30:45 |
++----------+----------+
+3 rows in set (0.00 sec)
+
+mysql> source F:\Coursera\SQL\MyCookbook\recipes\tables\date_val.sql
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+Query OK, 0 rows affected (0.03 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT d FROM date_val;
++------------+
+| d          |
++------------+
+| 1864-02-28 |
+| 1900-01-15 |
+| 1999-12-31 |
+| 2000-06-04 |
+| 2017-03-16 |
++------------+
+5 rows in set (0.00 sec)
+
+mysql> source F:\Coursera\SQL\MyCookbook\recipes\tables\datetime_val.sql
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+Query OK, 0 rows affected (0.09 sec)
+
+Query OK, 1 row affected (0.01 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.01 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
++---------------------+
+| dt                  |
++---------------------+
+| 1970-01-01 00:00:00 |
+| 1999-12-31 09:00:00 |
+| 2000-06-04 15:45:30 |
+| 2017-03-16 12:30:15 |
++---------------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT CURTIME(),CURTIME(2),CURTIME(6);
++-----------+-------------+-----------------+
+| CURTIME() | CURTIME(2)  | CURTIME(6)      |
++-----------+-------------+-----------------+
+| 16:04:14  | 16:04:14.18 | 16:04:14.181079 |
++-----------+-------------+-----------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT d, DATE_FORMAT(d,'%M %d, %Y') FROM date_val;
++------------+----------------------------+
+| d          | DATE_FORMAT(d,'%M %d, %Y') |
++------------+----------------------------+
+| 1864-02-28 | February 28, 1864          |
+| 1900-01-15 | January 15, 1900           |
+| 1999-12-31 | December 31, 1999          |
+| 2000-06-04 | June 04, 2000              |
+| 2017-03-16 | March 16, 2017             |
++------------+----------------------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT d, DATE_FORMAT(d,'%M %d, %Y') AS date FROM date_val;
++------------+-------------------+
+| d          | date              |
++------------+-------------------+
+| 1864-02-28 | February 28, 1864 |
+| 1900-01-15 | January 15, 1900  |
+| 1999-12-31 | December 31, 1999 |
+| 2000-06-04 | June 04, 2000     |
+| 2017-03-16 | March 16, 2017    |
++------------+-------------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT dt,
+    -> DATE_FORMAT(dt,'%c/%e/%y %r') AS format1,
+    -> DATE_FORMAT(dt,'%M/%e/%Y %T') AS format2
+    -> FROM datetime_val;
++---------------------+----------------------+---------------------------+
+| dt                  | format1              | format2                   |
++---------------------+----------------------+---------------------------+
+| 1970-01-01 00:00:00 | 1/1/70 12:00:00 AM   | January/1/1970 00:00:00   |
+| 1999-12-31 09:00:00 | 12/31/99 09:00:00 AM | December/31/1999 09:00:00 |
+| 2000-06-04 15:45:30 | 6/4/00 03:45:30 PM   | June/4/2000 15:45:30      |
+| 2017-03-16 12:30:15 | 3/16/17 12:30:15 PM  | March/16/2017 12:30:15    |
++---------------------+----------------------+---------------------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT dt,
+    -> DATE_FORMAT(dt,'%r') AS '12-hour time',
+    -> DATE_FORMAT(dt,'%T') AS '24-hour time'
+    -> FROM datetime_val;
++---------------------+--------------+--------------+
+| dt                  | 12-hour time | 24-hour time |
++---------------------+--------------+--------------+
+| 1970-01-01 00:00:00 | 12:00:00 AM  | 00:00:00     |
+| 1999-12-31 09:00:00 | 09:00:00 AM  | 09:00:00     |
+| 2000-06-04 15:45:30 | 03:45:30 PM  | 15:45:30     |
+| 2017-03-16 12:30:15 | 12:30:15 PM  | 12:30:15     |
++---------------------+--------------+--------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT t1,time_ampm(t1) FROM time_val;
++----------+---------------+
+| t1       | time_ampm(t1) |
++----------+---------------+
+| 15:00:00 | 03:00:00 p.m. |
+| 05:01:30 | 05:01:30 a.m. |
+| 12:30:20 | 12:30:20 p.m. |
++----------+---------------+
+3 rows in set (0.00 sec)
+
+mysql> CREATE TABLE t (ts TIMESTAMP);
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> INSERT INTO t (ts) VALUES ('2018-01-28 12:30:00');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT ts FROM t;
++---------------------+
+| ts                  |
++---------------------+
+| 2018-01-28 12:30:00 |
++---------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT @@global.time_zone,@@session,time_zone;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'time_zone' at line 1
+mysql> SELECT @@global.time_zone,@@session.time_zone;
++--------------------+---------------------+
+| @@global.time_zone | @@session.time_zone |
++--------------------+---------------------+
+| SYSTEM             | SYSTEM              |
++--------------------+---------------------+
+1 row in set (0.00 sec)
+
+mysql> SET GLOBAL time_zone='+06:00',SESSION time_zone='+04:00';
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> SELECT @@global.time_zone,@@session.time_zone;
++--------------------+---------------------+
+| @@global.time_zone | @@session.time_zone |
++--------------------+---------------------+
+| +06:00             | +04:00              |
++--------------------+---------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT ts FROM t;
++---------------------+
+| ts                  |
++---------------------+
+| 2018-01-28 21:30:00 |
++---------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT @dt AS Chicago,
+    -> CONVERT_TZ(@dt,'-06:00','+01:00')AS Berlin,
+    -> CONVERT_TZ(@dt,'-06:00','+00:00')AS London\G
+*************************** 1. row ***************************
+Chicago: 2017-01-29 23:00:00
+ Berlin: 2017-01-30 06:00:00
+ London: 2017-01-30 05:00:00
+1 row in set (0.00 sec)
+
+mysql>
