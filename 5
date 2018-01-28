@@ -373,15 +373,6 @@ mysql> SELECT thing, UPPER(thing), LOWER(thing) FROM limbs;
 +--------------+--------------+--------------+
 11 rows in set (0.00 sec)
 
-mysql> CREATE FUNCTION initial_cap (s VARCHAR(255))
-    -> RETURNS VARCHAR(255) DETERMINISTIC
-    -> RETURN CONCAT(UPPER(LEFT(s,1),MID(s,2));
-ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
-mysql> CREATE FUNCTION initial_cap (s VARCHAR(255))
-    -> RETURNS VARCHAR(255) DETERMINISTIC
-    -> RETURN CONCAT(UPPER(LEFT(s,1)),MID(s,2));
-Query OK, 0 rows affected (0.14 sec)
-
 mysql> SELECT thing,initial_cap(thing) FROM limbs;
 +--------------+--------------------+
 | thing        | initial_cap(thing) |
@@ -476,17 +467,6 @@ mysql> SELECT @data,SUBSTRING(@data,6),MID(@data,6);
 +------------+--------------------+--------------+
 1 row in set (0.00 sec)
 
-mysql> SET @email='postmaster@example.com'
-    -> SELECT @email,SUBSTRING_INDEX(@email,'@',1)AS user,
-    -> SUBSTRING_INDEX(@email,'@',-1)AS host;
-ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'SELECT @email,SUBSTRING_INDEX(@email,'@',1)AS user,
-SUBSTRING_INDEX(@email,'@',-' at line 2
-mysql> SET @email='postmaster@example.com'
-    -> SET @email='postmaster@example.com';
-ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'SET @email='postmaster@example.com'' at line 2
-mysql> SET @email='postmaster@example.com';
-Query OK, 0 rows affected (0.00 sec)
-
 mysql> SELECT @email,SUBSTRING_INDEX(@email,'@',1)AS user,
     -> SUBSTRING_INDEX(@email,'@',-1)AS host;
 +------------------------+------------+-------------+
@@ -568,3 +548,104 @@ mysql> SELECT name,name LIKE '%in%', name REGEXP 'in' FROM metal;
 | tin      |                1 |                1 |
 +----------+------------------+------------------+
 6 rows in set (0.11 sec)
+
+mysql> SELECT * FROM kjv LIMIT 5;
++-------+---------+------+------+------+------------------------------------------------------------------------------------------------------------------------------------------------+
+| bsect | bname   | bnum | cnum | vnum | vtext                                                                                                                                          |
++-------+---------+------+------+------+------------------------------------------------------------------------------------------------------------------------------------------------+
+| O     | Genesis |    1 |    1 |    1 | In the beginning God created the heaven and the earth.                                                                                         |
+| O     | Genesis |    1 |    1 |    2 | And the earth was without form, and void; and darkness was upon the face of the deep. And the Spirit of God moved upon the face of the waters. |
+| O     | Genesis |    1 |    1 |    3 | And God said, Let there be light: and there was light.                                                                                         |
+| O     | Genesis |    1 |    1 |    4 | And God saw the light, that it was good: and God divided the light from the darkness.                                                          |
+| O     | Genesis |    1 |    1 |    5 | And God called the light Day, and the darkness he called Night. And the evening and the morning were the first day.                            |
++-------+---------+------+------+------+------------------------------------------------------------------------------------------------------------------------------------------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT COUNT(8) FROM kjv WHERE MATCH(vtext) AGAINST ('Hadoram');
++----------+
+| COUNT(8) |
++----------+
+|        4 |
++----------+
+1 row in set (0.01 sec)
+
+mysql> SELECT bname,cnum,vnum,LEFT(vtext,65)AS vtext
+    -> FROM kjv
+    -> WHERE MATCH(vtext) AGAINST('Hadoram')\G
+*************************** 1. row ***************************
+bname: Genesis
+ cnum: 10
+ vnum: 27
+vtext: And Hadoram, and Uzal, and Diklah,
+*************************** 2. row ***************************
+bname: 1 Chronicles
+ cnum: 1
+ vnum: 21
+vtext: Hadoram also, and Uzal, and Diklah,
+*************************** 3. row ***************************
+bname: 1 Chronicles
+ cnum: 18
+ vnum: 10
+vtext: He sent Hadoram his son to king David, to inquire of his welfare,
+*************************** 4. row ***************************
+bname: 2 Chronicles
+ cnum: 10
+ vnum: 18
+vtext: Then king Rehoboam sent Hadoram that was over the tribute; and th
+4 rows in set (0.00 sec)
+
+
+mysql> SELECT COUNT(*) FROM kjv WHERE MATCH(vtext) AGAINST ('God');
++----------+
+| COUNT(*) |
++----------+
+|        0 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> SELECT COUNT(*)FROM kjv
+    -> WHERE MATCH(vtext) AGAINST ('+David+Goliath'IN BOOLEAN MODE);
++----------+
+| COUNT(*) |
++----------+
+|      894 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> SELECT COUNT(*)FROM kjv
+    -> WHERE MATCH(vtext) AGAINST ('+David-Goliath'IN BOOLEAN MODE);
++----------+
+| COUNT(*) |
++----------+
+|      894 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> SELECT COUNT(*)FROM kjv
+    -> WHERE MATCH(vtext) AGAINST ('+David -Goliath'IN BOOLEAN MODE);
++----------+
+| COUNT(*) |
++----------+
+|      892 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> SELECT COUNT(*)FROM kjv
+    -> WHERE MATCH(vtext) AGAINST ('-David +Goliath'IN BOOLEAN MODE);
++----------+
+| COUNT(*) |
++----------+
+|        4 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> SELECT COUNT(*)FROM kjv
+    -> WHERE MATCH(vtext) AGAINST ('whirl*'IN BOOLEAN MODE);
++----------+
+| COUNT(*) |
++----------+
+|       28 |
++----------+
+1 row in set (0.00 sec)
+
+mysql>
