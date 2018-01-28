@@ -326,3 +326,245 @@ mysql> SELECT * FROM(SELECT name,birth FROM profile ORDER BY birth DESC limit 4)
 4 rows in set (0.00 sec)
 
 mysql>
+mysql> USE COOKBOOK;
+Database changed
+mysql> SOURCE F:\Coursera\SQL\MyCookbook\recipes\tables\limbs.sql
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+Query OK, 0 rows affected (0.05 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT thing, UPPER(thing), LOWER(thing) FROM limbs;
++--------------+--------------+--------------+
+| thing        | UPPER(thing) | LOWER(thing) |
++--------------+--------------+--------------+
+| human        | HUMAN        | human        |
+| insect       | INSECT       | insect       |
+| squid        | SQUID        | squid        |
+| fish         | FISH         | fish         |
+| centipede    | CENTIPEDE    | centipede    |
+| table        | TABLE        | table        |
+| armchair     | ARMCHAIR     | armchair     |
+| phonograph   | PHONOGRAPH   | phonograph   |
+| tripod       | TRIPOD       | tripod       |
+| Peg Leg Pete | PEG LEG PETE | peg leg pete |
+| space alien  | SPACE ALIEN  | space alien  |
++--------------+--------------+--------------+
+11 rows in set (0.00 sec)
+
+mysql> CREATE FUNCTION initial_cap (s VARCHAR(255))
+    -> RETURNS VARCHAR(255) DETERMINISTIC
+    -> RETURN CONCAT(UPPER(LEFT(s,1),MID(s,2));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+mysql> CREATE FUNCTION initial_cap (s VARCHAR(255))
+    -> RETURNS VARCHAR(255) DETERMINISTIC
+    -> RETURN CONCAT(UPPER(LEFT(s,1)),MID(s,2));
+Query OK, 0 rows affected (0.14 sec)
+
+mysql> SELECT thing,initial_cap(thing) FROM limbs;
++--------------+--------------------+
+| thing        | initial_cap(thing) |
++--------------+--------------------+
+| human        | Human              |
+| insect       | Insect             |
+| squid        | Squid              |
+| fish         | Fish               |
+| centipede    | Centipede          |
+| table        | Table              |
+| armchair     | Armchair           |
+| phonograph   | Phonograph         |
+| tripod       | Tripod             |
+| Peg Leg Pete | Peg Leg Pete       |
+| space alien  | Space alien        |
++--------------+--------------------+
+11 rows in set (0.00 sec)
+
+mysql> source F:\Coursera\SQL\MyCookbook\recipes\tables\metal.sql
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+Query OK, 0 rows affected (0.06 sec)
+
+Query OK, 6 rows affected (0.01 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
++----------+
+| name     |
++----------+
+| gold     |
+| iron     |
+| lead     |
+| mercury  |
+| platinum |
+| tin      |
++----------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT name FROM metal WHERE name REGEXP'^me';
++---------+
+| name    |
++---------+
+| mercury |
++---------+
+1 row in set (0.02 sec)
+
+mysql> SELECT name FROM metal WHERE name REGEXP'd$';
++------+
+| name |
++------+
+| gold |
+| lead |
++------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT name FROM metal WHERE name REGEXP'in';
++----------+
+| name     |
++----------+
+| platinum |
+| tin      |
++----------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT name FROM metal WHERE name REGEXP'^..at';
++----------+
+| name     |
++----------+
+| platinum |
++----------+
+1 row in set (0.00 sec)
+
+mysql> SET @data ='2015-07-21';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SELECT @data,LEFT(@data,4) AS year, MID(@data,6,2)AS month,RIGHT(@data,2)AS day;
++------------+------+-------+------+
+| @data      | year | month | day  |
++------------+------+-------+------+
+| 2015-07-21 | 2015 | 07    | 21   |
++------------+------+-------+------+
+1 row in set (0.00 sec)
+
+mysql> SET @data ='2015-07-21';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SELECT @data,SUBSTRING(@data,6),MID(@data,6);
++------------+--------------------+--------------+
+| @data      | SUBSTRING(@data,6) | MID(@data,6) |
++------------+--------------------+--------------+
+| 2015-07-21 | 07-21              | 07-21        |
++------------+--------------------+--------------+
+1 row in set (0.00 sec)
+
+mysql> SET @email='postmaster@example.com'
+    -> SELECT @email,SUBSTRING_INDEX(@email,'@',1)AS user,
+    -> SUBSTRING_INDEX(@email,'@',-1)AS host;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'SELECT @email,SUBSTRING_INDEX(@email,'@',1)AS user,
+SUBSTRING_INDEX(@email,'@',-' at line 2
+mysql> SET @email='postmaster@example.com'
+    -> SET @email='postmaster@example.com';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'SET @email='postmaster@example.com'' at line 2
+mysql> SET @email='postmaster@example.com';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SELECT @email,SUBSTRING_INDEX(@email,'@',1)AS user,
+    -> SUBSTRING_INDEX(@email,'@',-1)AS host;
++------------------------+------------+-------------+
+| @email                 | user       | host        |
++------------------------+------------+-------------+
+| postmaster@example.com | postmaster | example.com |
++------------------------+------------+-------------+
+1 row in set (0.09 sec)
+
+mysql> SELECT CONCAT(name,'end in "d"?:',IF(RIGHT(name,1)='d','YES','NO')) AS 'ends in "d"?' FROM metal;
++------------------------+
+| ends in "d"?           |
++------------------------+
+| goldend in "d"?:YES    |
+| ironend in "d"?:NO     |
+| leadend in "d"?:YES    |
+| mercuryend in "d"?:NO  |
+| platinumend in "d"?:NO |
+| tinend in "d"?:NO      |
++------------------------+
+6 rows in set (0.00 sec)
+
+mysql> UPDATE metal SET name=CONCAT(name,'ide');
+Query OK, 6 rows affected (0.11 sec)
+Rows matched: 6  Changed: 6  Warnings: 0
+
+mysql> SELECT name FROM metal;
++-------------+
+| name        |
++-------------+
+| goldide     |
+| ironide     |
+| leadide     |
+| mercuryide  |
+| platinumide |
+| tinide      |
++-------------+
+6 rows in set (0.00 sec)
+
+mysql> UPDATE metal SET name=LEFT(name,CHAR_LENGTH(name)-3);
+Query OK, 6 rows affected (0.21 sec)
+Rows matched: 6  Changed: 6  Warnings: 0
+
+mysql> SELECT name FROM metal;
++----------+
+| name     |
++----------+
+| gold     |
+| iron     |
+| lead     |
+| mercury  |
+| platinum |
+| tin      |
++----------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT name,LOCATE('in',name),LOCATE('in',name,3) FROM metal;
++----------+-------------------+---------------------+
+| name     | LOCATE('in',name) | LOCATE('in',name,3) |
++----------+-------------------+---------------------+
+| gold     |                 0 |                   0 |
+| iron     |                 0 |                   0 |
+| lead     |                 0 |                   0 |
+| mercury  |                 0 |                   0 |
+| platinum |                 5 |                   5 |
+| tin      |                 2 |                   0 |
++----------+-------------------+---------------------+
+6 rows in set (0.02 sec)
+
+mysql> SELECT name,name LIKE '%in%', name REGEXP 'in' FROM metal;
++----------+------------------+------------------+
+| name     | name LIKE '%in%' | name REGEXP 'in' |
++----------+------------------+------------------+
+| gold     |                0 |                0 |
+| iron     |                0 |                0 |
+| lead     |                0 |                0 |
+| mercury  |                0 |                0 |
+| platinum |                1 |                1 |
+| tin      |                1 |                1 |
++----------+------------------+------------------+
+6 rows in set (0.11 sec)
