@@ -1032,4 +1032,87 @@ mysql> SELECT CURDATE(),DAYNAME(CURDATE());
 +------------+--------------------+
 1 row in set (0.00 sec)
 
+mysql> SELECT d,DAYNAME(d)AS day,
+    -> DATE_ADD(d,INTERVAL 1-DAYOFWEEK(d) DAY)AS SUNDAY,
+    -> DATE_ADD(d,INTERVAL 7-DAYOFWEEK(d) DAY)AS SATURDAY
+    -> FROM date_val;
++------------+----------+------------+------------+
+| d          | day      | SUNDAY     | SATURDAY   |
++------------+----------+------------+------------+
+| 1864-02-28 | Sunday   | 1864-02-28 | 1864-03-05 |
+| 1900-01-15 | Monday   | 1900-01-14 | 1900-01-20 |
+| 1999-12-31 | Friday   | 1999-12-26 | 2000-01-01 |
+| 2000-06-04 | Sunday   | 2000-06-04 | 2000-06-10 |
+| 2017-03-16 | Thursday | 2017-03-12 | 2017-03-18 |
++------------+----------+------------+------------+
+5 rows in set (0.03 sec)
+
+mysql> SET @target=
+    -> DATE_SUB(DATE_ADD(CURDATE(),INTERVAL 4-DAYOFWEEK(CURDATE()) DAY),
+    -> INTERVAL 14 DAY);
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SELECT CURDATE(),@target,DAYNAME(@target);
++------------+------------+------------------+
+| CURDATE()  | @target    | DAYNAME(@target) |
++------------+------------+------------------+
+| 2018-01-31 | 2018-01-17 | Wednesday        |
++------------+------------+------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT CURDATE(),@target,DAYOFWEEK(@target);
++------------+------------+--------------------+
+| CURDATE()  | @target    | DAYOFWEEK(@target) |
++------------+------------+--------------------+
+| 2018-01-31 | 2018-01-17 |                  4 |
++------------+------------+--------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT CURDATE(),@target,DAYNAME(@target);
++------------+------------+------------------+
+| CURDATE()  | @target    | DAYNAME(@target) |
++------------+------------+------------------+
+| 2018-01-31 | 2018-01-17 | Wednesday        |
++------------+------------+------------------+
+1 row in set (0.00 sec)
+
+mysql> SET @d1='2018-01-31',@d2='2016-01-30';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SELECT
+    -> DAYOFYEAR(DATE_FORMAT(@d1,'%Y-12-31'))AS 'days in 2018',
+    -> DAYOFYEAR(DATE_FORMAT(@d2,'%Y-12-31'))AS 'days in 2016';
++--------------+--------------+
+| days in 2018 | days in 2016 |
++--------------+--------------+
+|          365 |          366 |
++--------------+--------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT
+    -> CONCAT(YEAR(d),'-',MONTH(d),'-01') AS 'NON-ISO',
+    -> DATE_ADD(CONCAT(YEAR(d),'-',MONTH(d),'-01'),INTERVAL 0 DAY) AS 'ISO'
+    -> FROM date_val;
++------------+------------+
+| NON-ISO    | ISO        |
++------------+------------+
+| 1864-2-01  | 1864-02-01 |
+| 1900-1-01  | 1900-01-01 |
+| 1999-12-01 | 1999-12-01 |
+| 2000-6-01  | 2000-06-01 |
+| 2017-3-01  | 2017-03-01 |
++------------+------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT d FROM date_val
+    -> WHERE d>= DATE_SUB(CURDATE(),INTERVAL 20 YEAR);
++------------+
+| d          |
++------------+
+| 1999-12-31 |
+| 2000-06-04 |
+| 2017-03-16 |
++------------+
+3 rows in set (0.01 sec)
+
 mysql>
