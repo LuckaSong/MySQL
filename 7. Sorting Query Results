@@ -1,1 +1,396 @@
+Enter password: ******
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 2
+Server version: 5.7.21-log MySQL Community Server (GPL)
 
+Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use cookbook;
+Database changed
+mysql> source F:\Coursera\SQL\MyCookbook\recipes\tables\driver_log.sql
+Query OK, 0 rows affected, 1 warning (0.02 sec)
+
+Query OK, 0 rows affected (0.06 sec)
+
+Query OK, 10 rows affected (0.02 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
++--------+-------+------------+-------+
+| rec_id | name  | trav_date  | miles |
++--------+-------+------------+-------+
+|      1 | Ben   | 2014-07-30 |   152 |
+|      2 | Suzi  | 2014-07-29 |   391 |
+|      3 | Henry | 2014-07-29 |   300 |
+|      4 | Henry | 2014-07-27 |    96 |
+|      5 | Ben   | 2014-07-29 |   131 |
+|      6 | Henry | 2014-07-26 |   115 |
+|      7 | Suzi  | 2014-08-02 |   502 |
+|      8 | Henry | 2014-08-01 |   197 |
+|      9 | Ben   | 2014-08-02 |    79 |
+|     10 | Henry | 2014-07-30 |   203 |
++--------+-------+------------+-------+
+10 rows in set (0.00 sec)
+
++--------+-------+------------+-------+
+| rec_id | name  | trav_date  | miles |
++--------+-------+------------+-------+
+|      5 | Ben   | 2014-07-29 |   131 |
+|      1 | Ben   | 2014-07-30 |   152 |
+|      9 | Ben   | 2014-08-02 |    79 |
+|      6 | Henry | 2014-07-26 |   115 |
+|      4 | Henry | 2014-07-27 |    96 |
+|      3 | Henry | 2014-07-29 |   300 |
+|     10 | Henry | 2014-07-30 |   203 |
+|      8 | Henry | 2014-08-01 |   197 |
+|      2 | Suzi  | 2014-07-29 |   391 |
+|      7 | Suzi  | 2014-08-02 |   502 |
++--------+-------+------------+-------+
+10 rows in set (0.00 sec)
+
++-------+------------+--------------------+
+| name  | trav_date  | DAYNAME(trav_date) |
++-------+------------+--------------------+
+| Ben   | 2014-07-29 | Tuesday            |
+| Ben   | 2014-07-30 | Wednesday          |
+| Ben   | 2014-08-02 | Saturday           |
+| Henry | 2014-07-26 | Saturday           |
+| Henry | 2014-07-27 | Sunday             |
+| Henry | 2014-07-29 | Tuesday            |
+| Henry | 2014-07-30 | Wednesday          |
+| Henry | 2014-08-01 | Friday             |
+| Suzi  | 2014-07-29 | Tuesday            |
+| Suzi  | 2014-08-02 | Saturday           |
++-------+------------+--------------------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT * FROM mail;
++---------------------+---------+---------+---------+---------+---------+
+| t                   | srcuser | srchost | dstuser | dsthost | size    |
++---------------------+---------+---------+---------+---------+---------+
+| 2014-05-11 10:15:08 | barb    | saturn  | tricia  | mars    |   58274 |
+| 2014-05-12 12:48:13 | tricia  | mars    | gene    | venus   |  194925 |
+| 2014-05-12 15:02:49 | phil    | mars    | phil    | saturn  |    1048 |
+| 2014-05-12 18:59:18 | barb    | saturn  | tricia  | venus   |     271 |
+| 2014-05-14 09:31:37 | gene    | venus   | barb    | mars    |    2291 |
+| 2014-05-14 11:52:17 | phil    | mars    | tricia  | saturn  |    5781 |
+| 2014-05-14 14:42:21 | barb    | venus   | barb    | venus   |   98151 |
+| 2014-05-14 17:03:01 | tricia  | saturn  | phil    | venus   | 2394482 |
+| 2014-05-15 07:17:48 | gene    | mars    | gene    | saturn  |    3824 |
+| 2014-05-15 08:50:57 | phil    | venus   | phil    | venus   |     978 |
+| 2014-05-15 10:25:52 | gene    | mars    | tricia  | saturn  |  998532 |
+| 2014-05-15 17:35:31 | gene    | saturn  | gene    | mars    |    3856 |
+| 2014-05-16 09:00:28 | gene    | venus   | barb    | mars    |     613 |
+| 2014-05-16 23:04:19 | phil    | venus   | barb    | venus   |   10294 |
+| 2014-05-19 12:49:23 | phil    | mars    | tricia  | saturn  |     873 |
+| 2014-05-19 22:21:51 | gene    | saturn  | gene    | venus   |   23992 |
++---------------------+---------+---------+---------+---------+---------+
+16 rows in set (0.02 sec)
+
+mysql> SELECT * FROM driver_log ORDER BY name;
++--------+-------+------------+-------+
+| rec_id | name  | trav_date  | miles |
++--------+-------+------------+-------+
+|      1 | Ben   | 2014-07-30 |   152 |
+|      5 | Ben   | 2014-07-29 |   131 |
+|      9 | Ben   | 2014-08-02 |    79 |
+|      3 | Henry | 2014-07-29 |   300 |
+|      4 | Henry | 2014-07-27 |    96 |
+|      6 | Henry | 2014-07-26 |   115 |
+|      8 | Henry | 2014-08-01 |   197 |
+|     10 | Henry | 2014-07-30 |   203 |
+|      2 | Suzi  | 2014-07-29 |   391 |
+|      7 | Suzi  | 2014-08-02 |   502 |
++--------+-------+------------+-------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT * FROM driver_log ORDER BY name DESC;
++--------+-------+------------+-------+
+| rec_id | name  | trav_date  | miles |
++--------+-------+------------+-------+
+|      2 | Suzi  | 2014-07-29 |   391 |
+|      7 | Suzi  | 2014-08-02 |   502 |
+|      3 | Henry | 2014-07-29 |   300 |
+|      4 | Henry | 2014-07-27 |    96 |
+|      6 | Henry | 2014-07-26 |   115 |
+|      8 | Henry | 2014-08-01 |   197 |
+|     10 | Henry | 2014-07-30 |   203 |
+|      1 | Ben   | 2014-07-30 |   152 |
+|      5 | Ben   | 2014-07-29 |   131 |
+|      9 | Ben   | 2014-08-02 |    79 |
++--------+-------+------------+-------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT * FROM driver_log ORDER BY name,trav_date;
++--------+-------+------------+-------+
+| rec_id | name  | trav_date  | miles |
++--------+-------+------------+-------+
+|      5 | Ben   | 2014-07-29 |   131 |
+|      1 | Ben   | 2014-07-30 |   152 |
+|      9 | Ben   | 2014-08-02 |    79 |
+|      6 | Henry | 2014-07-26 |   115 |
+|      4 | Henry | 2014-07-27 |    96 |
+|      3 | Henry | 2014-07-29 |   300 |
+|     10 | Henry | 2014-07-30 |   203 |
+|      8 | Henry | 2014-08-01 |   197 |
+|      2 | Suzi  | 2014-07-29 |   391 |
+|      7 | Suzi  | 2014-08-02 |   502 |
++--------+-------+------------+-------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT * FROM driver_log ORDER BY name DESC,trav_date;
++--------+-------+------------+-------+
+| rec_id | name  | trav_date  | miles |
++--------+-------+------------+-------+
+|      2 | Suzi  | 2014-07-29 |   391 |
+|      7 | Suzi  | 2014-08-02 |   502 |
+|      6 | Henry | 2014-07-26 |   115 |
+|      4 | Henry | 2014-07-27 |    96 |
+|      3 | Henry | 2014-07-29 |   300 |
+|     10 | Henry | 2014-07-30 |   203 |
+|      8 | Henry | 2014-08-01 |   197 |
+|      5 | Ben   | 2014-07-29 |   131 |
+|      1 | Ben   | 2014-07-30 |   152 |
+|      9 | Ben   | 2014-08-02 |    79 |
++--------+-------+------------+-------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT name, trav_date, miles AS distance
+    -> FROM driver_log
+    -> ORDER BY distance;
++-------+------------+----------+
+| name  | trav_date  | distance |
++-------+------------+----------+
+| Ben   | 2014-08-02 |       79 |
+| Henry | 2014-07-27 |       96 |
+| Henry | 2014-07-26 |      115 |
+| Ben   | 2014-07-29 |      131 |
+| Ben   | 2014-07-30 |      152 |
+| Henry | 2014-08-01 |      197 |
+| Henry | 2014-07-30 |      203 |
+| Henry | 2014-07-29 |      300 |
+| Suzi  | 2014-07-29 |      391 |
+| Suzi  | 2014-08-02 |      502 |
++-------+------------+----------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT t,srcuser,FLOOR((size+1023)/1024) AS big_size
+    -> FROM mail
+    -> WHERE size >50000
+    -> ORDER BY big_size DESC;
++---------------------+---------+----------+
+| t                   | srcuser | big_size |
++---------------------+---------+----------+
+| 2014-05-14 17:03:01 | tricia  |     2339 |
+| 2014-05-15 10:25:52 | gene    |      976 |
+| 2014-05-12 12:48:13 | tricia  |      191 |
+| 2014-05-14 14:42:21 | barb    |       96 |
+| 2014-05-11 10:15:08 | barb    |       57 |
++---------------------+---------+----------+
+5 rows in set (0.01 sec)
+
+mysql> SELECT t, srcuser, CONCAT(FLOOR(size+1023)/1024),'K')AS size_in_K
+    -> FROM mail
+    -> WHERE size > 50000
+    -> ORDER BY size DESC;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')AS size_in_K
+FROM mail
+WHERE size > 50000
+ORDER BY size DESC' at line 1
+mysql> SELECT t, srcuser, CONCAT(FLOOR((size+1023)/1024),'K')AS size_in_K
+    -> FROM mail
+    -> WHERE size > 50000
+    -> ORDER BY size DESC;
++---------------------+---------+-----------+
+| t                   | srcuser | size_in_K |
++---------------------+---------+-----------+
+| 2014-05-14 17:03:01 | tricia  | 2339K     |
+| 2014-05-15 10:25:52 | gene    | 976K      |
+| 2014-05-12 12:48:13 | tricia  | 191K      |
+| 2014-05-14 14:42:21 | barb    | 96K       |
+| 2014-05-11 10:15:08 | barb    | 57K       |
++---------------------+---------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT t, CONCAT(srcuser,'@',srchost)AS sender,size
+    -> FROM mail
+    -> WHERE size >50000
+    -> ORDER BY size;
++---------------------+---------------+---------+
+| t                   | sender        | size    |
++---------------------+---------------+---------+
+| 2014-05-11 10:15:08 | barb@saturn   |   58274 |
+| 2014-05-14 14:42:21 | barb@venus    |   98151 |
+| 2014-05-12 12:48:13 | tricia@mars   |  194925 |
+| 2014-05-15 10:25:52 | gene@mars     |  998532 |
+| 2014-05-14 17:03:01 | tricia@saturn | 2394482 |
++---------------------+---------------+---------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT t, CONCAT(srcuser,'@',srchost)AS sender,size
+    -> FROM mail
+    -> WHERE size >50000
+    -> ORDER BY srchost,srcuser;
++---------------------+---------------+---------+
+| t                   | sender        | size    |
++---------------------+---------------+---------+
+| 2014-05-15 10:25:52 | gene@mars     |  998532 |
+| 2014-05-12 12:48:13 | tricia@mars   |  194925 |
+| 2014-05-11 10:15:08 | barb@saturn   |   58274 |
+| 2014-05-14 17:03:01 | tricia@saturn | 2394482 |
+| 2014-05-14 14:42:21 | barb@venus    |   98151 |
++---------------------+---------------+---------+
+5 rows in set (0.00 sec)
+
+mysql>
+mysql> source F:\Coursera\SQL\MyCookbook\recipes\tables\name.sql
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+Query OK, 0 rows affected (0.05 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
++-----------+------------+
+| last_name | first_name |
++-----------+------------+
+| Brown     | Kevin      |
+| Blue      | Vida       |
+| Gray      | Pete       |
+| White     | Devon      |
+| White     | Rondell    |
++-----------+------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT CONCAT(first_name,' ',last_name)
+    -> FROM name
+    -> ORDER BY last_name,first_name;
++----------------------------------+
+| CONCAT(first_name,' ',last_name) |
++----------------------------------+
+| Vida Blue                        |
+| Kevin Brown                      |
+| Pete Gray                        |
+| Devon White                      |
+| Rondell White                    |
++----------------------------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT *
+    -> FROM mail
+    -> ORDER BY time(t);
++---------------------+---------+---------+---------+---------+---------+
+| t                   | srcuser | srchost | dstuser | dsthost | size    |
++---------------------+---------+---------+---------+---------+---------+
+| 2014-05-15 07:17:48 | gene    | mars    | gene    | saturn  |    3824 |
+| 2014-05-15 08:50:57 | phil    | venus   | phil    | venus   |     978 |
+| 2014-05-16 09:00:28 | gene    | venus   | barb    | mars    |     613 |
+| 2014-05-14 09:31:37 | gene    | venus   | barb    | mars    |    2291 |
+| 2014-05-11 10:15:08 | barb    | saturn  | tricia  | mars    |   58274 |
+| 2014-05-15 10:25:52 | gene    | mars    | tricia  | saturn  |  998532 |
+| 2014-05-14 11:52:17 | phil    | mars    | tricia  | saturn  |    5781 |
+| 2014-05-12 12:48:13 | tricia  | mars    | gene    | venus   |  194925 |
+| 2014-05-19 12:49:23 | phil    | mars    | tricia  | saturn  |     873 |
+| 2014-05-14 14:42:21 | barb    | venus   | barb    | venus   |   98151 |
+| 2014-05-12 15:02:49 | phil    | mars    | phil    | saturn  |    1048 |
+| 2014-05-14 17:03:01 | tricia  | saturn  | phil    | venus   | 2394482 |
+| 2014-05-15 17:35:31 | gene    | saturn  | gene    | mars    |    3856 |
+| 2014-05-12 18:59:18 | barb    | saturn  | tricia  | venus   |     271 |
+| 2014-05-19 22:21:51 | gene    | saturn  | gene    | venus   |   23992 |
+| 2014-05-16 23:04:19 | phil    | venus   | barb    | venus   |   10294 |
++---------------------+---------+---------+---------+---------+---------+
+16 rows in set (0.00 sec)
+
+mysql> source F:\Coursera\SQL\MyCookbook\recipes\tables\occasion.sql
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+Query OK, 0 rows affected (0.03 sec)
+
+Query OK, 9 rows affected (0.00 sec)
+Records: 9  Duplicates: 0  Warnings: 0
+
++------------+-------------------------------------+
+| date       | description                         |
++------------+-------------------------------------+
+| 1789-07-04 | US Independence Day                 |
+| 1776-07-14 | Bastille Day                        |
+| 1957-10-04 | Sputnik launch date                 |
+| 1919-06-28 | Signing of the Treaty of Versailles |
+| 1732-02-22 | George Washington's birthday        |
+| 1989-11-09 | Opening of the Berlin Wall          |
+| 1944-06-06 | D-Day at Normandy Beaches           |
+| 1215-06-15 | Signing of the Magna Carta          |
+| 1809-02-12 | Abraham Lincoln's birthday          |
++------------+-------------------------------------+
+9 rows in set (0.00 sec)
+
+ERROR:
+No query specified
+
+mysql> SELECT *
+    -> FROM occasion
+    -> ORDER BY date;
++------------+-------------------------------------+
+| date       | description                         |
++------------+-------------------------------------+
+| 1215-06-15 | Signing of the Magna Carta          |
+| 1732-02-22 | George Washington's birthday        |
+| 1776-07-14 | Bastille Day                        |
+| 1789-07-04 | US Independence Day                 |
+| 1809-02-12 | Abraham Lincoln's birthday          |
+| 1919-06-28 | Signing of the Treaty of Versailles |
+| 1944-06-06 | D-Day at Normandy Beaches           |
+| 1957-10-04 | Sputnik launch date                 |
+| 1989-11-09 | Opening of the Berlin Wall          |
++------------+-------------------------------------+
+9 rows in set (0.00 sec)
+
+mysql> SELECT *
+    -> FROM occasion
+    -> ORDER BY MONTH(date),DAYOFMONTH(date);
++------------+-------------------------------------+
+| date       | description                         |
++------------+-------------------------------------+
+| 1809-02-12 | Abraham Lincoln's birthday          |
+| 1732-02-22 | George Washington's birthday        |
+| 1944-06-06 | D-Day at Normandy Beaches           |
+| 1215-06-15 | Signing of the Magna Carta          |
+| 1919-06-28 | Signing of the Treaty of Versailles |
+| 1789-07-04 | US Independence Day                 |
+| 1776-07-14 | Bastille Day                        |
+| 1957-10-04 | Sputnik launch date                 |
+| 1989-11-09 | Opening of the Berlin Wall          |
++------------+-------------------------------------+
+9 rows in set (0.00 sec)
+
+mysql> SELECT DAYNAME(date)AS day, date, description
+    -> FROM occasion
+    -> ORDER BY DAYOFWEEK(date);
++----------+------------+-------------------------------------+
+| day      | date       | description                         |
++----------+------------+-------------------------------------+
+| Sunday   | 1776-07-14 | Bastille Day                        |
+| Sunday   | 1809-02-12 | Abraham Lincoln's birthday          |
+| Monday   | 1215-06-15 | Signing of the Magna Carta          |
+| Tuesday  | 1944-06-06 | D-Day at Normandy Beaches           |
+| Thursday | 1989-11-09 | Opening of the Berlin Wall          |
+| Friday   | 1957-10-04 | Sputnik launch date                 |
+| Friday   | 1732-02-22 | George Washington's birthday        |
+| Saturday | 1789-07-04 | US Independence Day                 |
+| Saturday | 1919-06-28 | Signing of the Treaty of Versailles |
++----------+------------+-------------------------------------+
+9 rows in set (0.00 sec)
+
+mysql>
