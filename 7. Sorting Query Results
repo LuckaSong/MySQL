@@ -611,4 +611,77 @@ mysql> SELECT t,srcuser,dstuser,size
 +---------------------+---------+---------+---------+
 16 rows in set (0.00 sec)
 
+mysql> SELECT * FROM driver_log
+    -> ORDER BY FIELD(name,'Henry','Suzi','Ben');
++--------+-------+------------+-------+
+| rec_id | name  | trav_date  | miles |
++--------+-------+------------+-------+
+|      3 | Henry | 2014-07-29 |   300 |
+|      4 | Henry | 2014-07-27 |    96 |
+|      6 | Henry | 2014-07-26 |   115 |
+|      8 | Henry | 2014-08-01 |   197 |
+|     10 | Henry | 2014-07-30 |   203 |
+|      2 | Suzi  | 2014-07-29 |   391 |
+|      7 | Suzi  | 2014-08-02 |   502 |
+|      1 | Ben   | 2014-07-30 |   152 |
+|      5 | Ben   | 2014-07-29 |   131 |
+|      9 | Ben   | 2014-08-02 |    79 |
++--------+-------+------------+-------+
+10 rows in set (0.02 sec)
+
+mysql> CREATE TABLE weekday
+    -> (
+    ->  day ENUM ('Sunday','Monday','Tuesday','Wednesday',
+    ->                  'Thursday','Friday','Saturday')
+    -> );
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> INSERT INTO weekday (day) VALUES ('Monday'),('Friday'),
+    -> ('Tuesday'),('Sunday'),('Thursday'),('Saturday'),('Wednesday');
+Query OK, 7 rows affected (0.02 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> SELECT day,day+0 FROM weekday;
++-----------+-------+
+| day       | day+0 |
++-----------+-------+
+| Monday    |     2 |
+| Friday    |     6 |
+| Tuesday   |     3 |
+| Sunday    |     1 |
+| Thursday  |     5 |
+| Saturday  |     7 |
+| Wednesday |     4 |
++-----------+-------+
+7 rows in set (0.02 sec)
+
+mysql> SELECT day,day+0 FROM weekday ORDER BY day;
++-----------+-------+
+| day       | day+0 |
++-----------+-------+
+| Sunday    |     1 |
+| Monday    |     2 |
+| Tuesday   |     3 |
+| Wednesday |     4 |
+| Thursday  |     5 |
+| Friday    |     6 |
+| Saturday  |     7 |
++-----------+-------+
+7 rows in set (0.00 sec)
+
+mysql> SELECT day, day+0 FROM weekday
+    -> ORDER BY CAST(day AS CHAR);
++-----------+-------+
+| day       | day+0 |
++-----------+-------+
+| Friday    |     6 |
+| Monday    |     2 |
+| Saturday  |     7 |
+| Sunday    |     1 |
+| Thursday  |     5 |
+| Tuesday   |     3 |
+| Wednesday |     4 |
++-----------+-------+
+7 rows in set (0.00 sec)
+
 mysql>
