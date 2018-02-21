@@ -136,4 +136,452 @@ mysql> SELECT
 +---------------+---------------+
 1 row in set (0.00 sec)
 
+Enter password: ******
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 5
+Server version: 5.7.21-log MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use cookbook;
+Database changed
+mysql> SELECT MIN(t) AS earlist, MAX(t) AS latest, MIN(size) AS smallest, MAX(size) AS largest
+    -> FROM mail
+    -> ;
++---------------------+---------------------+----------+---------+
+| earlist             | latest              | smallest | largest |
++---------------------+---------------------+----------+---------+
+| 2014-05-11 10:15:08 | 2014-05-19 22:21:51 |      271 | 2394482 |
++---------------------+---------------------+----------+---------+
+1 row in set (0.02 sec)
+
+mysql> SELECT MAX(pop) AS 'most people',MIN(pop) AS 'fewest people'
+    -> FROM states;
++-------------+---------------+
+| most people | fewest people |
++-------------+---------------+
+|    37253956 |        563626 |
++-------------+---------------+
+1 row in set (0.02 sec)
+
+mysql> SELECT MIN(name) AS first, MAX(name) AS last,
+    -> MIN(CHAR_LENGTH(name)) AS shortest,
+    -> MAX(CHAR_LENGTH(name)) AS longest
+    -> FROM states;
++---------+---------+----------+---------+
+| first   | last    | shortest | longest |
++---------+---------+----------+---------+
+| Alabama | Wyoming |        4 |      14 |
++---------+---------+----------+---------+
+1 row in set (0.02 sec)
+
+mysql> SELECT SUM(size) AS 'total traffic'
+    -> ,
+    -> AVG(size) AS 'average message size'
+    -> FROM mail;
++---------------+----------------------+
+| total traffic | average message size |
++---------------+----------------------+
+|       3798185 |          237386.5625 |
++---------------+----------------------+
+1 row in set (0.02 sec)
+
+mysql> SELECT SUM(miles) AS 'total miles', AVG(miles) AS 'average miles/day'
+    -> FROM driver_log;
++-------------+-------------------+
+| total miles | average miles/day |
++-------------+-------------------+
+|        2166 |          216.6000 |
++-------------+-------------------+
+1 row in set (0.03 sec)
+
+mysql> SELECT SUM(pop) as 'total population'
+    -> FROM states;
++------------------+
+| total population |
++------------------+
+|        308143815 |
++------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT t1 FROM time_val;
++----------+
+| t1       |
++----------+
+| 15:00:00 |
+| 05:01:30 |
+| 12:30:20 |
++----------+
+3 rows in set (0.04 sec)
+
+mysql> SELECT SUM(TIME_TO_SEC(t1)) AS 'total seconds',
+    -> SEC_TO_TIME(SUM(TIME_TO_SEC(t1))) AS 'total time'
+    -> FROM time_val;
++---------------+------------+
+| total seconds | total time |
++---------------+------------+
+|        117110 | 32:31:50   |
++---------------+------------+
+1 row in set (0.02 sec)
+
+mysql> SELECT DISTINCT name FROM driver_log
+    -> ORDER BY name;
++-------+
+| name  |
++-------+
+| Ben   |
+| Henry |
+| Suzi  |
++-------+
+3 rows in set (0.02 sec)
+
+mysql> SELECT COUNT(DISTINCT(name)) FROM driver_log;
++-----------------------+
+| COUNT(DISTINCT(name)) |
++-----------------------+
+|                     3 |
++-----------------------+
+1 row in set (0.02 sec)
+
+mysql> SELECT DISTINCT srcuser, dstuser FROM mail
+    -> ORDER BY srcuser,dstuser;
++---------+---------+
+| srcuser | dstuser |
++---------+---------+
+| barb    | barb    |
+| barb    | tricia  |
+| gene    | barb    |
+| gene    | gene    |
+| gene    | tricia  |
+| phil    | barb    |
+| phil    | phil    |
+| phil    | tricia  |
+| tricia  | gene    |
+| tricia  | phil    |
++---------+---------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT COUNT(DISTINCT srcuser,dstuser) FROM mail;
++---------------------------------+
+| COUNT(DISTINCT srcuser,dstuser) |
++---------------------------------+
+|                              10 |
++---------------------------------+
+1 row in set (0.00 sec)
+
+mysql> CREATE VIEW trip_summary_view AS
+    -> SELECT
+    -> COUNT(IF(DAYOFWEEK(trav_date) IN (1,7),1,NULL)) AS 'weekend trips',
+    -> COUNT(IF(DAYOFWEEK(trav_date) IN (1,7),NULL,1)) AS 'weekday trips'
+    -> FROM driver_log;
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> SELECT * FROM trip_summary_view;
++---------------+---------------+
+| weekend trips | weekday trips |
++---------------+---------------+
+|             4 |             6 |
++---------------+---------------+
+1 row in set (0.02 sec)
+
+mysql> SET @max=(SELECT MAX(pop) FROM states);
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> SELECT pop AS 'highest population',name FROM states
+    -> WHERE pop=@max;
++--------------------+------------+
+| highest population | name       |
++--------------------+------------+
+|           37253956 | California |
++--------------------+------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT pop AS 'highest population',name FROM states
+    -> where POP=(SELECT MAX(pop) FROM states);
++--------------------+------------+
+| highest population | name       |
++--------------------+------------+
+|           37253956 | California |
++--------------------+------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT bname,cnum,vnum,vtext FROM kjv
+    -> WHERE CHAR_LENGTH(vtext)=(SELECT MIN(CHAR_LENGTH(vtext))FROM kjv);
++-------+------+------+-------------+
+| bname | cnum | vnum | vtext       |
++-------+------+------+-------------+
+| John  |   11 |   35 | Jesus wept. |
++-------+------+------+-------------+
+1 row in set (0.13 sec)
+
+mysql> CREATE TEMPORARY TABLE temp SELECT MAX(pop) AS maxpop FROM states;
+Query OK, 1 row affected (0.03 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+
+mysql> SELECT states.* FROM states INNER JOIN temp
+    -> ON states.pop=temp.maxpop;
++------------+--------+------------+----------+
+| name       | abbrev | statehood  | pop      |
++------------+--------+------------+----------+
+| California | CA     | 1850-09-09 | 37253956 |
++------------+--------+------------+----------+
+1 row in set (0.01 sec)
+
+mysql> SELECT srcuser, COUNT(*) FROM mail
+    -> GROUP BY srcuser;
++---------+----------+
+| srcuser | COUNT(*) |
++---------+----------+
+| barb    |        3 |
+| gene    |        6 |
+| phil    |        5 |
+| tricia  |        2 |
++---------+----------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT srcuser,
+    -> SUM(size) AS 'total size'
+    -> AVG(size) AS 'average size'
+    -> FROM mail GROUP BY srcuser;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AVG(size) AS 'average size'
+FROM mail GROUP BY srcuser' at line 3
+mysql> SELECT srcuser,
+    -> SUM(size) AS 'total size',
+    -> AVG(size) AS 'average size'
+    -> FROM mail GROUP BY srcuser;
++---------+------------+--------------+
+| srcuser | total size | average size |
++---------+------------+--------------+
+| barb    |     156696 |   52232.0000 |
+| gene    |    1033108 |  172184.6667 |
+| phil    |      18974 |    3794.8000 |
+| tricia  |    2589407 | 1294703.5000 |
++---------+------------+--------------+
+4 rows in set (0.02 sec)
+
+mysql> SELECT srcuser,srchost, COUNT(srcuser) FROM mail
+    -> GROUP BY srcuser,srchost;
++---------+---------+----------------+
+| srcuser | srchost | COUNT(srcuser) |
++---------+---------+----------------+
+| barb    | saturn  |              2 |
+| barb    | venus   |              1 |
+| gene    | mars    |              2 |
+| gene    | saturn  |              2 |
+| gene    | venus   |              2 |
+| phil    | mars    |              3 |
+| phil    | venus   |              2 |
+| tricia  | mars    |              1 |
+| tricia  | saturn  |              1 |
++---------+---------+----------------+
+9 rows in set (0.00 sec)
+
+mysql> SELECT srcuser, MAX(size), MAX(t) FROM mail GROUP BY srcuser;
++---------+-----------+---------------------+
+| srcuser | MAX(size) | MAX(t)              |
++---------+-----------+---------------------+
+| barb    |     98151 | 2014-05-14 14:42:21 |
+| gene    |    998532 | 2014-05-19 22:21:51 |
+| phil    |     10294 | 2014-05-19 12:49:23 |
+| tricia  |   2394482 | 2014-05-14 17:03:01 |
++---------+-----------+---------------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT srcuser, MAX(size), MAX(t) FROM mail GROUP BY srcuser,dstuser;
++---------+-----------+---------------------+
+| srcuser | MAX(size) | MAX(t)              |
++---------+-----------+---------------------+
+| barb    |     98151 | 2014-05-14 14:42:21 |
+| barb    |     58274 | 2014-05-12 18:59:18 |
+| gene    |      2291 | 2014-05-16 09:00:28 |
+| gene    |     23992 | 2014-05-19 22:21:51 |
+| gene    |    998532 | 2014-05-15 10:25:52 |
+| phil    |     10294 | 2014-05-16 23:04:19 |
+| phil    |      1048 | 2014-05-15 08:50:57 |
+| phil    |      5781 | 2014-05-19 12:49:23 |
+| tricia  |    194925 | 2014-05-12 12:48:13 |
+| tricia  |   2394482 | 2014-05-14 17:03:01 |
++---------+-----------+---------------------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT name, MAX(miles) AS 'longest trip'
+    -> FROM driver_log GROUP BY name;
++-------+--------------+
+| name  | longest trip |
++-------+--------------+
+| Ben   |          152 |
+| Henry |          300 |
+| Suzi  |          502 |
++-------+--------------+
+3 rows in set (0.00 sec)
+
+mysql> CREATE TEMPORARY TABLE t
+    -> SELECT name MAX(miles) AS miles FROM driver_log GROUP BY name;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'MAX(miles) AS miles FROM driver_log GROUP BY name' at line 2
+mysql> CREATE TEMPORARY TABLE t
+    -> SELECT name, MAX(miles) AS miles FROM driver_log GROUP BY name;
+Query OK, 3 rows affected (0.02 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> SELECT d.name,d.trav_date,d.miles AS 'longest trip'
+    -> FROM driver_log AS d INNER JOIN t using(name,miles) ORDER BY name;
++-------+------------+--------------+
+| name  | trav_date  | longest trip |
++-------+------------+--------------+
+| Ben   | 2014-07-30 |          152 |
+| Henry | 2014-07-29 |          300 |
+| Suzi  | 2014-08-02 |          502 |
++-------+------------+--------------+
+3 rows in set (0.01 sec)
+
+mysql> source F:\Coursera\SQL\MyCookbook\recipes\tables\expt.sql
+Query OK, 0 rows affected (0.04 sec)
+
+Query OK, 0 rows affected (0.06 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
++---------+------+-------+
+| subject | test | score |
++---------+------+-------+
+| Jane    | A    |    47 |
+| Jane    | B    |    50 |
+| Jane    | C    |  NULL |
+| Jane    | D    |  NULL |
+| Marvin  | A    |    52 |
+| Marvin  | B    |    45 |
+| Marvin  | C    |    53 |
+| Marvin  | D    |  NULL |
++---------+------+-------+
+8 rows in set (0.00 sec)
+
+mysql> SELECT subject, COUNT(score) AS n, SUM(score) AS total,AVG(score) AS average,MIN(score) AS lowest, MAX(score) AS highest
+    -> FROM expt GROUP BY subject;
++---------+---+-------+---------+--------+---------+
+| subject | n | total | average | lowest | highest |
++---------+---+-------+---------+--------+---------+
+| Jane    | 2 |    97 | 48.5000 |     47 |      50 |
+| Marvin  | 3 |   150 | 50.0000 |     45 |      53 |
++---------+---+-------+---------+--------+---------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT subject, COUNT(*) AS total, COUNT(score) AS 'nonmissing',
+    -> COUNT(*) - COUNT(score) AS missing
+    -> FROM expt GROUP BY subject;
++---------+-------+------------+---------+
+| subject | total | nonmissing | missing |
++---------+-------+------------+---------+
+| Jane    |     4 |          2 |       2 |
+| Marvin  |     4 |          3 |       1 |
++---------+-------+------------+---------+
+2 rows in set (0.02 sec)
+
+mysql> SELECT name, COUNT(*)
+    -> FROM driver_log
+    -> GROUP BY name
+    -> HAVING COUNT(*) >3;
++-------+----------+
+| name  | COUNT(*) |
++-------+----------+
+| Henry |        5 |
++-------+----------+
+1 row in set (0.00 sec)
+
+mysql> SELECT srcuser,dstuser
+    -> FROM mail GROUP BY srcuser,dstuser
+    -> HAVING COUNT(*)=1;
++---------+---------+
+| srcuser | dstuser |
++---------+---------+
+| barb    | barb    |
+| gene    | tricia  |
+| phil    | barb    |
+| tricia  | gene    |
+| tricia  | phil    |
++---------+---------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT MONTHNAME(statehood) AS month,
+    -> DAYOFMONTH(statehood) AS day,
+    -> COUNT(*) AS count
+    -> FROM states GROUP BY month, day
+    -> HAVING count >1;
++----------+------+-------+
+| month    | day  | count |
++----------+------+-------+
+| February |   14 |     2 |
+| June     |    1 |     2 |
+| March    |    1 |     2 |
+| May      |   29 |     2 |
+| November |    2 |     2 |
++----------+------+-------+
+5 rows in set (0.02 sec)
+
+mysql> SELECT FLOOR(pop/5000000) AS 'max population(millions)',
+    -> COUNT(*) AS 'number of states'
+    -> FROM states GROUP BY 'max population(millions)';
++--------------------------+------------------+
+| max population(millions) | number of states |
++--------------------------+------------------+
+|                        0 |               50 |
++--------------------------+------------------+
+1 row in set (0.02 sec)
+
+mysql> SELECT FLOOR((pop+4999999)/5000000)*5 AS 'max population(millions)',
+    -> COUNT(*) AS 'number of states'
+    -> FROM states GROUP BY 'max population(millions)';
++--------------------------+------------------+
+| max population(millions) | number of states |
++--------------------------+------------------+
+|                        5 |               50 |
++--------------------------+------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT name, SUM(miles)
+    -> FROM driver_log
+    -> GROUP BY name
+    -> ORDER BY SUM(miles) DESC
+    -> LIMIT 1;
++-------+------------+
+| name  | SUM(miles) |
++-------+------------+
+| Henry |        911 |
++-------+------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT LEFT(name,1) AS letter, COUNT(*) FROM states
+    -> GROUP BY letter
+    -> ORDER BY count(*) DESC LIMIT 1;
++--------+----------+
+| letter | COUNT(*) |
++--------+----------+
+| M      |        8 |
++--------+----------+
+1 row in set (0.02 sec)
+
+mysql> SET @max=(
+    -> SELECT COUNT(*) FROM states
+    -> GROUP BY LEFT(name,1) ORDER BY COUNT(*) DESC LIMIT 1);
+Query OK, 0 rows affected (0.00 sec)
+
 mysql>
